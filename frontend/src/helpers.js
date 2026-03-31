@@ -12,7 +12,7 @@ const formatDate = (date, type) => {
 
   const hours = d.getHours()
   const minutes = d.getMinutes() < 10 ? `0${d.getMinutes()}` : d.getMinutes()
-  const seconds = d.getSeconds()
+  const seconds = d.getSeconds() < 10 ? `0${d.getSeconds()}` : d.getSeconds()
 
   const time = `${hours}:${minutes}:${seconds}`
 
