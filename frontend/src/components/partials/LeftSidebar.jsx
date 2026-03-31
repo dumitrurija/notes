@@ -1,10 +1,13 @@
+import { VITE_API_URL } from "../../helpers"
+
 import { CiSearch } from "react-icons/ci";
 import { IoMdSettings } from "react-icons/io";
+
 
 const LeftSidebar = ({ setNotes, setSelectedNote }) => {
 
   const createNewNote = async () => {
-    const response = await fetch("http://localhost:3000/notes/add", {
+    const response = await fetch(`${VITE_API_URL}/notes/add`, {
       headers: {"Content-Type": "application/json"},
       method: "POST",
       body: JSON.stringify({})
@@ -17,7 +20,7 @@ const LeftSidebar = ({ setNotes, setSelectedNote }) => {
   }
 
   const handleSearch = async (searchValue) => {
-    const response = await fetch(`http://localhost:3000/notes/search?q=${searchValue}`)
+    const response = await fetch(`${VITE_API_URL}/notes/search?q=${searchValue}`)
     const data = await response.json()
 
     setNotes(data)

@@ -1,3 +1,5 @@
+import { VITE_API_URL } from "../../helpers"
+
 import { useEffect, useState } from 'react'
 import { MdDelete } from "react-icons/md";
 import { contentLimit, formatDate } from "../../helpers"
@@ -14,7 +16,7 @@ const NotesList = ({ notes, setNotes, selectedNote, setSelectedNote }) => {
   const handleDeleteNote = async (note, e) => {
     e.stopPropagation()
     
-    await fetch(`http://localhost:3000/notes/delete/${note._id}`, {
+    await fetch(`${VITE_API_URL}/notes/delete/${note._id}`, {
       method: "DELETE"
     })
 

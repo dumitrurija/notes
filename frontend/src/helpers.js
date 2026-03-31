@@ -1,3 +1,5 @@
+const VITE_API_URL = import.meta.env.VITE_API_URL;
+
 const contentLimit = (text) => text && text.length > 100 ? text.substring(0, 100) + "..." : text
 
 const formatDate = (date, type) => {
@@ -17,4 +19,4 @@ const formatDate = (date, type) => {
   return type === "list" ? formattedDate : `${formattedDate} ${time}`;
 }
 
-export { contentLimit, formatDate }
+export { VITE_API_URL, contentLimit, formatDate }

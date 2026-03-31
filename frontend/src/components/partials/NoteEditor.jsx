@@ -1,3 +1,5 @@
+import { VITE_API_URL } from "../../helpers";
+
 import { useEffect, useState } from "react";
 import { CiShare2 } from "react-icons/ci";
 import { MdDelete } from "react-icons/md";
@@ -14,7 +16,7 @@ const NoteEditor = ({ setNotes, selectedNote, setSelectedNote }) => {
     setSelectedNote(updated)
     setNotes(notes => notes.map(note => note._id === selectedNote._id ? updated : note))
     
-    await fetch(`http://localhost:3000/notes/edit/${selectedNote._id}`, {
+    await fetch(`${VITE_API_URL}/notes/edit/${selectedNote._id}`, {
       headers: {"Content-Type": "application/json"},
       method: "PUT",
       body: JSON.stringify(updated)
@@ -22,7 +24,7 @@ const NoteEditor = ({ setNotes, selectedNote, setSelectedNote }) => {
   }
 
   const handleDeleteNote = async (selectedNote) => {
-    await fetch(`http://localhost:3000/notes/delete/${selectedNote._id}`, {
+    await fetch(`${VITE_API_URL}/notes/delete/${selectedNote._id}`, {
       method: "DELETE"
     })
 
