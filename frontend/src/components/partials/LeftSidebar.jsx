@@ -27,7 +27,7 @@ const LeftSidebar = ({ setNotes, setSelectedNote }) => {
   }
 
   return (
-    <div className='h-screen w-1/6 flex flex-col justify-between bg-zinc-200 p-6'>
+    <div className='lg:h-screen lg:w-1/6 flex flex-col max-lg:gap-4 justify-between bg-zinc-200 p-6'>
       <div className="flex flex-col gap-4">
         <button 
           onClick={createNewNote}

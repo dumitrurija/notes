@@ -28,7 +28,7 @@ const NotesList = ({ notes, setNotes, selectedNote, setSelectedNote }) => {
   }
 
   return (
-    <div className='w-2/6 bg-zinc-100 p-6'>
+    <div className='lg:w-2/6 bg-zinc-100 p-6'>
       <h1 className='text-xl font-medium mb-4'>Notes List</h1>
 
       <div className='flex flex-col gap-4'>

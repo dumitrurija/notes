@@ -32,7 +32,7 @@ const NoteEditor = ({ setNotes, selectedNote, setSelectedNote }) => {
   }  
 
   return (
-    <div className='bg-zinc-50 w-3/6 p-6 flex flex-col'>
+    <div className='lg:w-3/6 bg-zinc-50 p-6 flex flex-col'>
       <h2 className='text-xl font-medium mb-5'>Note Editor</h2>
 
       { selectedNote._id && 
@@ -78,11 +78,11 @@ const NoteEditor = ({ setNotes, selectedNote, setSelectedNote }) => {
         <div id="text" className="flex-1 border-t border-t-gray-200">
           <textarea value={selectedNote.content || ""} 
                     onChange={(e) => handleUpdateNote("content", e.target.value)}
-                    className="w-full h-full p-4 outline-none resize-none bg-white" id="">
+                    className="w-full max-lg:h-100 p-4 outline-none resize-none bg-white" id="">
           </textarea>
         </div>
 
-        <div id="bottom" className="flex items-center justify-between">
+        <div id="bottom" className="flex items-center justify-between max-lg:hidden">
           <div id="category-chooser" className="flex flex-1 flex-col gap-1 p-4">
             <label className="text-sm font-medium text-zinc-600">Notebook</label>
             <select className="outline-none bg-white p-2 rounded border border-gray-200">

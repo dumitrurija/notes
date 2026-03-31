@@ -22,7 +22,7 @@ const App = () => {
   }, [])
 
   return (
-    <section className="flex">
+    <section className="flex max-lg:flex-col">
       <LeftSidebar setNotes={setNotes} setSelectedNote={setSelectedNote} />
       <NotesList notes={notes} setNotes={setNotes} selectedNote={selectedNote} setSelectedNote={setSelectedNote} />
       <NoteEditor setNotes={setNotes} selectedNote={selectedNote} setSelectedNote={setSelectedNote} />
