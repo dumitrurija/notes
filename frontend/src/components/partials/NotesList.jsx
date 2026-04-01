@@ -35,7 +35,7 @@ const NotesList = ({ notes, setNotes, selectedNote, setSelectedNote, activeTag }
 
       <div className='flex flex-col gap-4'>
         {
-          visibleTags.sort((a, b) => new Date(b.editedAt) - new Date(a.editedAt)).map((note, i) => (
+          [...visibleTags].sort((a, b) => new Date(b.editedAt) - new Date(a.editedAt)).map((note, i) => (
             <div key={note._id} 
                  className={`rounded-xl p-3 flex flex-col gap-2 ${selectedNote._id === note._id ? 'border-2 border-blue-500/75' : 'bg-white shadow-xs'}`}
                  onClick={() => handleSelectedNote(note)}
