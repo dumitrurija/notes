@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { MdDelete } from "react-icons/md";
 import { contentLimit, formatDate } from "../../helpers"
 
-const NotesList = ({ notes, setNotes, selectedNote, setSelectedNote, activeTag }) => {
+const NotesList = ({ notes, setNotes, selectedNote, setSelectedNote, activeTag, activeNotebook }) => {
 
   const handleSelectedNote = (note) => {
     if (note._id === selectedNote._id) {
@@ -27,7 +27,11 @@ const NotesList = ({ notes, setNotes, selectedNote, setSelectedNote, activeTag }
     }
   }
 
-  const visibleTags = activeTag ? notes.filter(note => note.tags.includes(activeTag)) : notes
+  const visibleTags = notes.filter(note => {
+    if (activeTag) return note.tags.includes(activeTag)
+    if (activeNotebook) return note.notebook === activeNotebook
+    return true
+  })
 
   return (
     <div className='lg:w-2/6 bg-zinc-100 p-6'>

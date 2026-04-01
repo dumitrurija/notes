@@ -22,11 +22,12 @@ const App = () => {
   }, [])
 
   const [activeTag, setActiveTag] = useState(null)
+  const [activeNotebook, setActiveNotebook] = useState(null)
 
   return (
     <section className="flex max-lg:flex-col">
-      <LeftSidebar notes={notes} setNotes={setNotes} setSelectedNote={setSelectedNote} activeTag={activeTag} setActiveTag={setActiveTag} />
-      <NotesList notes={notes} setNotes={setNotes} selectedNote={selectedNote} setSelectedNote={setSelectedNote} activeTag={activeTag} />
+      <LeftSidebar notes={notes} setNotes={setNotes} setSelectedNote={setSelectedNote} activeTag={activeTag} setActiveTag={setActiveTag} activeNotebook={activeNotebook} setActiveNotebook={setActiveNotebook} />
+      <NotesList notes={notes} setNotes={setNotes} selectedNote={selectedNote} setSelectedNote={setSelectedNote} activeTag={activeTag} activeNotebook={activeNotebook} />
       <NoteEditor setNotes={setNotes} selectedNote={selectedNote} setSelectedNote={setSelectedNote} />
     </section>
   )

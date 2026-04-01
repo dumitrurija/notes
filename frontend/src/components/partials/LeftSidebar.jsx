@@ -5,7 +5,7 @@ import { CiSearch } from "react-icons/ci";
 import { IoMdSettings } from "react-icons/io";
 
 
-const LeftSidebar = ({ notes, setNotes, setSelectedNote, activeTag, setActiveTag }) => {
+const LeftSidebar = ({ notes, setNotes, setSelectedNote, activeTag, setActiveTag, activeNotebook, setActiveNotebook }) => {
 
   const createNewNote = async () => {
     const response = await fetch(`${VITE_API_URL}/notes/add`, {
@@ -38,6 +38,14 @@ const LeftSidebar = ({ notes, setNotes, setSelectedNote, activeTag, setActiveTag
     setSelectedNote({})
   }
 
+  const handleActiveNotebook = (notebook) => {
+    if (notebook === activeNotebook) {
+      return setActiveNotebook(null)
+    }
+    setActiveNotebook(notebook)
+    setSelectedNote({})
+  }
+
   return (
     <div className='lg:h-screen lg:w-1/6 flex flex-col max-lg:gap-4 justify-between bg-zinc-200 p-6'>
       <div className="flex flex-col gap-4">
@@ -61,22 +69,34 @@ const LeftSidebar = ({ notes, setNotes, setSelectedNote, activeTag, setActiveTag
         <div>
           <h2 className="font-medium">Notebooks</h2>
           <ul className="ml-2">
-            {notebooks.map(notebook => <li key={notebook} className="ml-2">{ notebook }</li>)}
+            {notebooks.map(notebook => 
+              <li key={notebook} 
+                  onClick={() => handleActiveNotebook(notebook) } 
+                  className={`ml-1 px-1 ${notebook === activeNotebook ? 'bg-blue-500/25 w-fit rounded-xl' : ''}`}>
+                    { notebook }
+              </li>
+            )}
           </ul>
         </div>
 
         <div>
           <h2 className="font-medium">Tags</h2>
             <ul className="ml-2">
-            {tags.map(tag => <li key={tag} onClick={() => handleActiveTag(tag)} className={`ml-2 ${tag === activeTag ? 'bg-blue-500/25 w-fit rounded-xl' : ''}`}>{ tag }</li>)}
+            {tags.map(tag => 
+              <li key={tag} 
+                  onClick={() => handleActiveTag(tag)} 
+                  className={`ml-1 px-1 ${tag === activeTag ? 'bg-blue-500/25 w-fit rounded-lg' : ''}`}>
+                    { tag }
+              </li>
+            )}
           </ul>
         </div>
       </div>
 
-      <a className="flex items-center gap-2">
+      {/* <a className="flex items-center gap-2">
         <IoMdSettings />
         <h2>Settings</h2>
-      </a>
+      </a> */}
     </div>
   )
 }
