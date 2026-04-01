@@ -13,6 +13,8 @@ mongoose.connect(process.env.MONGODB_URI)
 const Note = mongoose.model("Note", new mongoose.Schema({
   title: String,
   content: String,
+  notebook: String,
+  tags: Array,
   editedAt: { type: Date, default: Date.now }
 }))
 

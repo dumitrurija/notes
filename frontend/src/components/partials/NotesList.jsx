@@ -40,11 +40,15 @@ const NotesList = ({ notes, setNotes, selectedNote, setSelectedNote }) => {
             >
               <div className='flex justify-between items-center'>
 
-                <h2 className='font-medium'>{note.title}</h2>
+                <div className="flex items-center gap-2">
+                  <h2 className='font-medium'>{ note.title }</h2>
+                  { note.notebook && <span className="p-1 px-2 rounded-lg text-xs font-extralight uppercase bg-blue-400/15 text-blue-500">{ note.notebook }</span>}
+                </div>
 
                 <MdDelete
                   onClick={(e) => handleDeleteNote(note, e)}
-                  className='hover:text-red-400 transition' />
+                  className='hover:text-red-400 transition'
+                />
               </div>
 
               <p className='text-sm wrap-break-word'>{ contentLimit(note.content) }</p>

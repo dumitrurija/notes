@@ -31,6 +31,39 @@ const NoteEditor = ({ setNotes, selectedNote, setSelectedNote }) => {
     setSelectedNote(null)
   }  
 
+  const handleAddTags = async (e) => {
+    if (e.key !== "Enter") return
+
+    const value = e.target.value.trim()
+    const updatedTags = [...selectedNote.tags, value]
+    const updated = {...selectedNote, tags: updatedTags}
+
+    setSelectedNote(updated)
+    setNotes(n => n.map(note => note._id === selectedNote._id ? {...selectedNote, tags: updatedTags} : note))
+
+    await fetch(`${VITE_API_URL}/notes/edit/${selectedNote._id}`, {
+      headers: {"Content-Type": "application/json"},
+      method: "PUT",
+      body: JSON.stringify(updated)
+    })
+
+    e.target.value = ""
+  }
+
+  const handleRemoveTags = async (tag) => {
+    const updatedTags = selectedNote.tags.filter(t => t !== tag)
+    const updated = {...selectedNote, tags: updatedTags}
+
+    setSelectedNote(updated)
+    setNotes(notes => notes.map(note => note._id === selectedNote._id ? updated : note))
+
+    await fetch(`${VITE_API_URL}/notes/edit/:id`, {
+      headers: {"Content-Type": "application/json"},
+      method: "PUT",
+      body: JSON.stringify(updated)
+    })
+  }
+
   return (
     <div className='lg:w-3/6 bg-zinc-50 p-6 flex flex-col'>
       <h2 className='text-xl font-medium mb-5'>Note Editor</h2>
@@ -78,14 +111,18 @@ const NoteEditor = ({ setNotes, selectedNote, setSelectedNote }) => {
         <div id="text" className="flex-1 border-t border-t-gray-200">
           <textarea value={selectedNote.content || ""} 
                     onChange={(e) => handleUpdateNote("content", e.target.value)}
-                    className="w-full max-lg:h-100 p-4 outline-none resize-none bg-white" id="">
+                    className="w-full max-lg:h-100 h-full p-4 outline-none resize-none bg-white" id="">
           </textarea>
         </div>
 
         <div id="bottom" className="flex items-center justify-between max-lg:hidden">
           <div id="category-chooser" className="flex flex-1 flex-col gap-1 p-4">
             <label className="text-sm font-medium text-zinc-600">Notebook</label>
-            <select className="outline-none bg-white p-2 rounded border border-gray-200">
+            <select className="outline-none bg-white p-2 rounded border border-gray-200"
+                    onChange={(e) => handleUpdateNote("notebook", e.target.value)}  
+                    value={selectedNote.notebook}      
+            >
+              <option value=""></option>
               <option value="Work">Work</option>
               <option value="College">College</option>
             </select>
@@ -95,20 +132,23 @@ const NoteEditor = ({ setNotes, selectedNote, setSelectedNote }) => {
             <label className="text-sm font-medium text-zinc-600">Tags</label>
 
             <div className="flex flex-wrap items-center gap-2 p-2 bg-white border border-gray-200 rounded-lg">
-              <span className="flex items-center gap-1 px-2 py-1 text-sm bg-gray-200 text-gray-700 rounded-md">
-                Plan
-                <button className="hover:text-red-500 font-bold ml-1">×</button>
-              </span>
-
-              <span className="flex items-center gap-1 px-2 py-1 text-sm bg-zinc-200 text-zinc-700 rounded-md">
-                Fitness
-                <button className="hover:text-red-500 font-bold ml-1">×</button>
-              </span>
+              {
+                selectedNote.tags && 
+                selectedNote.tags.map(tag => <span key={tag} className="flex items-center gap-1 px-2 py-1 text-sm bg-gray-200 text-gray-700 rounded-md">
+                  {tag}
+                  <button onClick={() => handleRemoveTags(tag)}
+                          className="hover:text-red-500 font-bold ml-1">
+                          ×
+                  </button>
+                </span>)
+                
+              }
 
               <input 
+                onKeyDown={(e) => handleAddTags(e)}
                 type="text" 
                 placeholder="Add tag +" 
-                className="grow outline-none text-sm text-zinc-500 bg-transparent min-w-25"
+                className="grow outline-none text-sm bg-transparent min-w-25"
               />
             </div>
           </div>
