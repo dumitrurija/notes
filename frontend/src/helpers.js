@@ -16,7 +16,7 @@ const formatDate = (date, type) => {
 
   const time = `${hours}:${minutes}:${seconds}`
 
-  return type === "list" ? formattedDate : `${formattedDate} ${time}`;
+  return type === "list" ? formattedDate : `${formattedDate} | ${time}`;
 }
 
 export { VITE_API_URL, contentLimit, formatDate }

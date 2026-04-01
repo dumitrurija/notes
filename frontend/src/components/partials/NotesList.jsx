@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { MdDelete } from "react-icons/md";
 import { contentLimit, formatDate } from "../../helpers"
 
-const NotesList = ({ notes, setNotes, selectedNote, setSelectedNote }) => {
+const NotesList = ({ notes, setNotes, selectedNote, setSelectedNote, activeTag }) => {
 
   const handleSelectedNote = (note) => {
     if (note._id === selectedNote._id) {
@@ -27,13 +27,15 @@ const NotesList = ({ notes, setNotes, selectedNote, setSelectedNote }) => {
     }
   }
 
+  const visibleTags = activeTag ? notes.filter(note => note.tags.includes(activeTag)) : notes
+
   return (
     <div className='lg:w-2/6 bg-zinc-100 p-6'>
       <h1 className='text-xl font-medium mb-4'>Notes List</h1>
 
       <div className='flex flex-col gap-4'>
         {
-          notes.sort((a, b) => new Date(b.editedAt) - new Date(a.editedAt)).map((note, i) => (
+          visibleTags.sort((a, b) => new Date(b.editedAt) - new Date(a.editedAt)).map((note, i) => (
             <div key={note._id} 
                  className={`rounded-xl p-3 flex flex-col gap-2 ${selectedNote._id === note._id ? 'border-2 border-blue-500/75' : 'bg-white shadow-xs'}`}
                  onClick={() => handleSelectedNote(note)}

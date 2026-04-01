@@ -1,10 +1,11 @@
+import { useState } from "react";
 import { VITE_API_URL } from "../../helpers"
 
 import { CiSearch } from "react-icons/ci";
 import { IoMdSettings } from "react-icons/io";
 
 
-const LeftSidebar = ({ setNotes, setSelectedNote }) => {
+const LeftSidebar = ({ notes, setNotes, setSelectedNote, activeTag, setActiveTag }) => {
 
   const createNewNote = async () => {
     const response = await fetch(`${VITE_API_URL}/notes/add`, {
@@ -24,6 +25,17 @@ const LeftSidebar = ({ setNotes, setSelectedNote }) => {
     const data = await response.json()
 
     setNotes(data)
+  }
+
+  const notebooks = [...new Set(notes.map(note => note.notebook))]
+  const tags = [...new Set(notes.flatMap(note => note.tags))]
+
+  const handleActiveTag = (tag) => {
+    if (tag === activeTag) {
+      return setActiveTag(null)
+    }
+    setActiveTag(tag)
+    setSelectedNote({})
   }
 
   return (
@@ -49,14 +61,15 @@ const LeftSidebar = ({ setNotes, setSelectedNote }) => {
         <div>
           <h2 className="font-medium">Notebooks</h2>
           <ul className="ml-2">
-            <li>Work</li>
-            <li>Personal</li>
-            <li>Ideads</li>
+            {notebooks.map(notebook => <li key={notebook} className="ml-2">{ notebook }</li>)}
           </ul>
         </div>
 
         <div>
           <h2 className="font-medium">Tags</h2>
+            <ul className="ml-2">
+            {tags.map(tag => <li key={tag} onClick={() => handleActiveTag(tag)} className={`ml-2 ${tag === activeTag ? 'bg-blue-500/25 w-fit rounded-xl' : ''}`}>{ tag }</li>)}
+          </ul>
         </div>
       </div>
 

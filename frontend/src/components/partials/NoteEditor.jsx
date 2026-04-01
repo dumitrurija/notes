@@ -57,7 +57,7 @@ const NoteEditor = ({ setNotes, selectedNote, setSelectedNote }) => {
     setSelectedNote(updated)
     setNotes(notes => notes.map(note => note._id === selectedNote._id ? updated : note))
 
-    await fetch(`${VITE_API_URL}/notes/edit/:id`, {
+    await fetch(`${VITE_API_URL}/notes/edit/${selectedNote._id}`, {
       headers: {"Content-Type": "application/json"},
       method: "PUT",
       body: JSON.stringify(updated)
