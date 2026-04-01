@@ -40,13 +40,12 @@ const LeftSidebar = ({ notes, setNotes, setSelectedNote, activeTag, setActiveTag
   }
 
   const notebooks = [...new Set(notes.map(note => note.notebook).filter(Boolean))]
-  
   const tags = [...new Set(notes.flatMap(note => note.tags).filter(Boolean))]
 
   const handleActiveFilter = (value, active, setActive) => {
+    setSelectedNote({})
     if (value === active) return setActive(null)
     setActive(value)
-    setSelectedNote({})
   }
 
   return (
@@ -75,7 +74,7 @@ const LeftSidebar = ({ notes, setNotes, setSelectedNote, activeTag, setActiveTag
             {notebooks.map(notebook => 
               <li key={notebook} 
                   onClick={() => handleActiveFilter(notebook, activeNotebook, setActiveNotebook) } 
-                  className={`ml-1 px-1 ${notebook === activeNotebook ? 'bg-blue-500/25 w-fit rounded-xl' : ''}`}>
+                  className={`ml-1 px-1 hover:bg-blue-500/25 transition w-fit rounded-xl ${notebook === activeNotebook ? 'bg-blue-500/50 rounded-lg' : ''}`}>
                     { notebook }
               </li>
             )}
@@ -88,7 +87,7 @@ const LeftSidebar = ({ notes, setNotes, setSelectedNote, activeTag, setActiveTag
             {tags.map(tag => 
               <li key={tag} 
                   onClick={() => handleActiveFilter(tag, activeTag, setActiveTag)} 
-                  className={`ml-1 px-1 ${tag === activeTag ? 'bg-blue-500/25 w-fit rounded-lg' : ''}`}>
+                  className={`ml-1 px-1 hover:bg-blue-500/25 transition w-fit rounded-xl ${tag === activeTag ? 'bg-blue-500/50 rounded-lg' : ''}`}>
                     { tag }
               </li>
             )}

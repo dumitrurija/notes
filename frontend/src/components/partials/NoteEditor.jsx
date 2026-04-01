@@ -168,8 +168,8 @@ const NoteEditor = ({ setNotes, selectedNote, setSelectedNote, setLoading }) => 
           </textarea>
         </div>
 
-        <div id="bottom" className="flex items-center justify-between max-lg:hidden">
-          <div id="category-chooser" className="flex flex-1 flex-col gap-1 p-4">
+        <div id="bottom" className="flex items-center justify-between max-lg:flex-col">
+          <div id="category-chooser" className="flex flex-1 flex-col gap-1 p-4 max-lg:w-full">
             <label className="text-sm font-medium text-zinc-600">Notebook</label>
             <select className="outline-none bg-white p-2 rounded border border-gray-200"
                     onChange={(e) => handleUpdateNote("notebook", e.target.value)}  
@@ -181,7 +181,7 @@ const NoteEditor = ({ setNotes, selectedNote, setSelectedNote, setLoading }) => 
             </select>
           </div>
 
-          <div id="tag-chooser" className="flex flex-2 flex-col gap-1 p-4">
+          <div id="tag-chooser" className="flex flex-2 flex-col gap-1 p-4 max-lg:w-full">
             <label className="text-sm font-medium text-zinc-600">Tags</label>
 
             <div className="flex flex-wrap items-center gap-2 p-2 bg-white border border-gray-200 rounded-lg">
