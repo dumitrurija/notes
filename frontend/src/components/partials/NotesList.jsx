@@ -41,9 +41,9 @@ const NotesList = ({ notes, setNotes, selectedNote, setSelectedNote, activeTag, 
   }
 
   const visibleNotes = notes.filter(note => {
-    if (activeTag) return note.tags.includes(activeTag)
-    if (activeNotebook) return note.notebook === activeNotebook
-    return true
+    const tagMatch = activeTag ? note.tags.includes(activeTag) : true
+    const notebookMatch = activeNotebook ? note.notebook === activeNotebook : true
+    return tagMatch && notebookMatch
   })
 
   return (
