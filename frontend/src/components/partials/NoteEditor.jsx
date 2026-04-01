@@ -6,62 +6,115 @@ import { MdDelete } from "react-icons/md";
 import { FaRegEdit } from "react-icons/fa";
 import { formatDate } from "../../helpers";
 
-const NoteEditor = ({ setNotes, selectedNote, setSelectedNote }) => {
+const NoteEditor = ({ setNotes, selectedNote, setSelectedNote, setLoading }) => {
 
   const [editTitle, setEditTitle] = useState()
 
   const handleUpdateNote = async (type, value) => {
-    const updated = {...selectedNote, editedAt: Date.now(), [type]: value}
+    setLoading(true)
+    try {
+      const updated = {...selectedNote, editedAt: Date.now(), [type]: value}
 
-    setSelectedNote(updated)
-    setNotes(notes => notes.map(note => note._id === selectedNote._id ? updated : note))
-    
-    await fetch(`${VITE_API_URL}/notes/edit/${selectedNote._id}`, {
-      headers: {"Content-Type": "application/json"},
-      method: "PUT",
-      body: JSON.stringify(updated)
-    })
+      setSelectedNote(updated)
+      setNotes(notes => notes.map(note => note._id === selectedNote._id ? updated : note))
+      
+      const response = await fetch(`${VITE_API_URL}/notes/edit/${selectedNote._id}`, {
+        headers: {"Content-Type": "application/json"},
+        method: "PUT",
+        body: JSON.stringify(updated)
+      })
+
+      if (!response.ok) {
+        return console.error("Failed to update note: ", response.status)
+      }
+    }
+    catch(e) {
+      return console.error("Network error: ", e)
+    }
+    finally {
+      setLoading(false)
+    }
   }
 
   const handleDeleteNote = async (selectedNote) => {
-    await fetch(`${VITE_API_URL}/notes/delete/${selectedNote._id}`, {
-      method: "DELETE"
-    })
+    setLoading(true)
+    try {
+      setNotes(notes => notes.filter(note => note._id !== selectedNote._id))
+      setSelectedNote(null)
 
-    setSelectedNote(null)
+      const response = await fetch(`${VITE_API_URL}/notes/delete/${selectedNote._id}`, {
+        method: "DELETE"
+      })
+
+      if (!response.ok) {
+        return console.error("Failed to delete note: ", response.status);
+      }
+    }
+    catch(e) {
+      return console.error("Network error: ", e)
+    }
+    finally {
+      setLoading(false)
+    }
   }  
 
   const handleAddTags = async (e) => {
-    if (e.key !== "Enter") return
+    setLoading(true)
+    try {
+      if (e.key !== "Enter") return
 
-    const value = e.target.value.trim()
-    const updatedTags = [...selectedNote.tags, value]
-    const updated = {...selectedNote, tags: updatedTags}
+      const value = e.target.value.trim()
+      const updatedTags = [...selectedNote.tags, value]
+      const updated = {...selectedNote, tags: updatedTags}
 
-    setSelectedNote(updated)
-    setNotes(n => n.map(note => note._id === selectedNote._id ? {...selectedNote, tags: updatedTags} : note))
+      setSelectedNote(updated)
+      setNotes(n => n.map(note => note._id === selectedNote._id ? {...selectedNote, tags: updatedTags} : note))
 
-    await fetch(`${VITE_API_URL}/notes/edit/${selectedNote._id}`, {
-      headers: {"Content-Type": "application/json"},
-      method: "PUT",
-      body: JSON.stringify(updated)
-    })
+      const response = await fetch(`${VITE_API_URL}/notes/edit/${selectedNote._id}`, {
+        headers: {"Content-Type": "application/json"},
+        method: "PUT",
+        body: JSON.stringify(updated)
+      })
 
-    e.target.value = ""
+      if (!response.ok) {
+        return console.error("Failed to add tag: ", response.status)
+      }
+
+      e.target.value = ""
+    }
+    catch (e) {
+      return console.error("Network error: ", e)
+    }
+    finally {
+      setLoading(false)
+    }
   }
 
   const handleRemoveTags = async (tag) => {
-    const updatedTags = selectedNote.tags.filter(t => t !== tag)
-    const updated = {...selectedNote, tags: updatedTags}
+    setLoading(true)
+    try {
+      const updatedTags = selectedNote.tags.filter(t => t !== tag)
+      const updated = {...selectedNote, tags: updatedTags}
 
-    setSelectedNote(updated)
-    setNotes(notes => notes.map(note => note._id === selectedNote._id ? updated : note))
+      setSelectedNote(updated)
+      setNotes(notes => notes.map(note => note._id === selectedNote._id ? updated : note))
 
-    await fetch(`${VITE_API_URL}/notes/edit/${selectedNote._id}`, {
-      headers: {"Content-Type": "application/json"},
-      method: "PUT",
-      body: JSON.stringify(updated)
-    })
+      const response = await fetch(`${VITE_API_URL}/notes/edit/${selectedNote._id}`, {
+        headers: {"Content-Type": "application/json"},
+        method: "PUT",
+        body: JSON.stringify(updated)
+      })
+
+      if (!response.ok) {
+        return console.error("Failed to remove tag: ", response.status)
+      }
+    }
+    catch (e) {
+      return console.error("Network error: ", e)
+    }
+    finally {
+      setLoading(false)
+    }
   }
 
   return (

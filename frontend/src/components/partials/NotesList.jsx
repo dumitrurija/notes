@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { MdDelete } from "react-icons/md";
 import { contentLimit, formatDate } from "../../helpers"
 
-const NotesList = ({ notes, setNotes, selectedNote, setSelectedNote, activeTag, activeNotebook }) => {
+const NotesList = ({ notes, setNotes, selectedNote, setSelectedNote, activeTag, activeNotebook, setLoading }) => {
 
   const handleSelectedNote = (note) => {
     if (note._id === selectedNote._id) {
@@ -14,20 +14,33 @@ const NotesList = ({ notes, setNotes, selectedNote, setSelectedNote, activeTag, 
   }
 
   const handleDeleteNote = async (note, e) => {
-    e.stopPropagation()
-    
-    await fetch(`${VITE_API_URL}/notes/delete/${note._id}`, {
-      method: "DELETE"
-    })
+    setLoading(true)
+    try {
+      e.stopPropagation()
+      
+      setNotes(notes => notes.filter(n => n._id !== note._id))
 
-    setNotes(notes => notes.filter(n => n._id !== note._id))
+      if (selectedNote._id === note._id) {
+        setSelectedNote({})
+      } 
 
-    if (selectedNote._id === note._id) {
-      setSelectedNote({})
+      const response = await fetch(`${VITE_API_URL}/notes/delete/${note._id}`, {
+        method: "DELETE"
+      })
+
+      if (!response.ok) {
+        return console.error("Failed to delete note: ", response.status)
+      }
+    }
+    catch (e) {
+      return console.error("Network error: ", e)
+    }
+    finally {
+      setLoading(false)
     }
   }
 
-  const visibleTags = notes.filter(note => {
+  const visibleNotes = notes.filter(note => {
     if (activeTag) return note.tags.includes(activeTag)
     if (activeNotebook) return note.notebook === activeNotebook
     return true
@@ -39,9 +52,9 @@ const NotesList = ({ notes, setNotes, selectedNote, setSelectedNote, activeTag, 
 
       <div className='flex flex-col gap-4'>
         {
-          [...visibleTags].sort((a, b) => new Date(b.editedAt) - new Date(a.editedAt)).map((note, i) => (
+          [...visibleNotes].sort((a, b) => new Date(b.editedAt) - new Date(a.editedAt)).map((note, i) => (
             <div key={note._id} 
-                 className={`rounded-xl p-3 flex flex-col gap-2 ${selectedNote._id === note._id ? 'border-2 border-blue-500/75' : 'bg-white shadow-xs'}`}
+                 className={`rounded-xl p-3 flex flex-col gap-2 ${selectedNote?._id === note._id ? 'border-2 border-blue-500/75' : 'bg-white shadow-xs'}`}
                  onClick={() => handleSelectedNote(note)}
             >
               <div className='flex justify-between items-center'>

@@ -5,19 +5,31 @@ import { CiSearch } from "react-icons/ci";
 import { IoMdSettings } from "react-icons/io";
 
 
-const LeftSidebar = ({ notes, setNotes, setSelectedNote, activeTag, setActiveTag, activeNotebook, setActiveNotebook }) => {
+const LeftSidebar = ({ notes, setNotes, setSelectedNote, activeTag, setActiveTag, activeNotebook, setActiveNotebook, setLoading }) => {
 
   const createNewNote = async () => {
-    const response = await fetch(`${VITE_API_URL}/notes/add`, {
-      headers: {"Content-Type": "application/json"},
-      method: "POST",
-      body: JSON.stringify({})
-    })
+    setLoading(true)
+    try {
+      const response = await fetch(`${VITE_API_URL}/notes/add`, {
+        headers: {"Content-Type": "application/json"},
+        method: "POST",
+        body: JSON.stringify({})
+      })
 
-    const created = await response.json()
-    setSelectedNote(created)
+      if (!response.ok) {
+        return console.error("Failed to create note: ", response.status);
+      }
 
-    setNotes(notes => [created, ...notes])
+      const created = await response.json()
+      setSelectedNote(created)
+      setNotes(notes => [created, ...notes])
+    }
+    catch (e) {
+      return console.error("Network error: ", e)
+    }
+    finally {
+      setLoading(false)
+    }
   }
 
   const handleSearch = async (searchValue) => {
@@ -27,22 +39,13 @@ const LeftSidebar = ({ notes, setNotes, setSelectedNote, activeTag, setActiveTag
     setNotes(data)
   }
 
-  const notebooks = [...new Set(notes.map(note => note.notebook))]
-  const tags = [...new Set(notes.flatMap(note => note.tags))]
+  const notebooks = [...new Set(notes.map(note => note.notebook).filter(Boolean))]
+  
+  const tags = [...new Set(notes.flatMap(note => note.tags).filter(Boolean))]
 
-  const handleActiveTag = (tag) => {
-    if (tag === activeTag) {
-      return setActiveTag(null)
-    }
-    setActiveTag(tag)
-    setSelectedNote({})
-  }
-
-  const handleActiveNotebook = (notebook) => {
-    if (notebook === activeNotebook) {
-      return setActiveNotebook(null)
-    }
-    setActiveNotebook(notebook)
+  const handleActiveFilter = (value, active, setActive) => {
+    if (value === active) return setActive(null)
+    setActive(value)
     setSelectedNote({})
   }
 
@@ -71,7 +74,7 @@ const LeftSidebar = ({ notes, setNotes, setSelectedNote, activeTag, setActiveTag
           <ul className="ml-2">
             {notebooks.map(notebook => 
               <li key={notebook} 
-                  onClick={() => handleActiveNotebook(notebook) } 
+                  onClick={() => handleActiveFilter(notebook, activeNotebook, setActiveNotebook) } 
                   className={`ml-1 px-1 ${notebook === activeNotebook ? 'bg-blue-500/25 w-fit rounded-xl' : ''}`}>
                     { notebook }
               </li>
@@ -84,7 +87,7 @@ const LeftSidebar = ({ notes, setNotes, setSelectedNote, activeTag, setActiveTag
             <ul className="ml-2">
             {tags.map(tag => 
               <li key={tag} 
-                  onClick={() => handleActiveTag(tag)} 
+                  onClick={() => handleActiveFilter(tag, activeTag, setActiveTag)} 
                   className={`ml-1 px-1 ${tag === activeTag ? 'bg-blue-500/25 w-fit rounded-lg' : ''}`}>
                     { tag }
               </li>

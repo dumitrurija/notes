@@ -2,7 +2,7 @@ require('dotenv').config()
 
 const express = require('express')
 const cors = require('cors')
-const { mongoose } = require('mongoose')
+const mongoose = require('mongoose')
 
 const app = express()
 
@@ -21,10 +21,10 @@ const Note = mongoose.model("Note", new mongoose.Schema({
 app.get("/notes", async (req, res) => {
   try {
     const notes = await Note.find()
-    res.send(notes)
+    res.status(200).send(notes)
   }
   catch (e) {
-    res.send(`Error, ${e}`)
+    res.status(500).send(`Error, ${e}`)
   }
 })
 
@@ -37,20 +37,20 @@ app.get("/notes/search", async (req, res) => {
       { content: {$regex: query, $options: 'i'} }
     ] })
 
-    res.send(filtered)
+    res.status(200).send(filtered)
   }
   catch (e) {
-    res.send(`Error, ${e}`)
+    res.status(500).send(`Error, ${e}`)
   }
 })
 
 app.post("/notes/add", async (req, res) => {
   try {
     const note = await Note.create(req.body)
-    res.json(note)
+    res.status(200).json(note)
   }
   catch (e) {
-    res.send(`Erorr: ${e}`)
+    res.status(500).send(`Erorr: ${e}`)
   }
 })
 
@@ -58,10 +58,10 @@ app.put("/notes/edit/:id", async (req, res) => {
   try {
     const id = req.params.id
 
-    res.send(await Note.findByIdAndUpdate(id, req.body))
+    res.status(200).send(await Note.findByIdAndUpdate(id, req.body))
   } 
   catch (e) {
-    res.send(`Error, ${e}`)
+    res.status(500).send(`Error, ${e}`)
   }
 })
 
@@ -69,11 +69,13 @@ app.delete("/notes/delete/:id", async (req, res) => {
   try {
     const id = req.params.id
 
-    res.send(await Note.findByIdAndDelete(id))
+    res.status(200).send(await Note.findByIdAndDelete(id))
   }
   catch(e) {
-    res.send(`Error, ${e}`)
+    res.status(500).send(`Error, ${e}`)
   }
 })
 
-app.listen(3000)
+app.listen(3000, () => {
+  console.log('Server is running');
+})
